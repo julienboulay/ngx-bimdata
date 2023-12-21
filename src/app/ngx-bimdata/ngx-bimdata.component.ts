@@ -36,7 +36,7 @@ export class NgxBimdataComponent {
   @Output()
   modelsLoaded = new EventEmitter<void>();
 
-  $viewer!: any;
+  $viewer!: BDV.$Viewer;
   viewer!: BDV.Viewer;
 
   ngOnChanges(changes: SimpleChanges) {
@@ -63,15 +63,14 @@ export class NgxBimdataComponent {
 
       this.viewer.registerPlugin({
         name: 'onViewerStart',
-        startupScript: ($viewer: BDV.$Viewer) => { // Compile with ng serve, but not in VSCode
+        startupScript: ($viewer: BDV.$Viewer) => {
           this.$viewer = $viewer;
 
           this.$viewer.globalContext.hub.on(
             "3d-model-loaded",
             () => this.modelsLoaded.next(),
           )
-        },
-        i18n: true // Required, but typed as any in d.ts file. I don't know what to put here
+        }
       });
 
       this.viewer.mount(this.viewerElement.nativeElement);
